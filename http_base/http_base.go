@@ -1,9 +1,3 @@
-/**
-File: http_base.go
-Description:
-Created by joyyizhang on 2020/04/29.
-Version:
-**/
 package http_base
 
 import (

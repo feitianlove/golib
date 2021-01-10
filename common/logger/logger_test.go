@@ -12,7 +12,7 @@ import (
 func TestInitLoggerTenMinute(t *testing.T) {
 	got, err := logger.InitLoggerTenMinute(&logger.LogConf{
 		LogLevel:      "info",
-		LogPath:       "/data/home/joyyizhang/golib/log/golib_test.log",
+		LogPath:       "/data/home/golib/log/golib_test.log",
 		LogReserveDay: 1,
 		ReportCaller:  false,
 	})
