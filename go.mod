@@ -3,6 +3,7 @@ module github.com/feitianlove/golib
 go 1.13
 
 require (
+	github.com/BurntSushi/toml v0.3.1
 	github.com/Shopify/sarama v1.27.2
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/coreos/bbolt v0.0.0-00010101000000-000000000000 // indirect
@@ -10,8 +11,10 @@ require (
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
+	github.com/dchest/captcha v0.0.0-20200903113550-03f5f0333e1f
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
+	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-redis/redis/v8 v8.4.4
@@ -44,7 +47,6 @@ require (
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
 	google.golang.org/genproto v0.0.0-20201214200347-8c77b98c765d // indirect
 	google.golang.org/grpc v1.34.0 // indirect
-	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/resty.v1 v1.12.0
 	sigs.k8s.io/yaml v1.2.0 // indirect
