@@ -76,7 +76,7 @@ func NewKafkaConsumer(kafka *Kafka) (*KConsumer, error) {
 	return &KConsumer{Consumer: consumer}, err
 }
 
-func (consumer KConsumer) RecvMessage(topic string) {
+func (consumer KConsumer) RecvMessage(returnData func(data *sarama.ConsumerMessage), topic string) {
 	var wg sync.WaitGroup
 	c := consumer.Consumer
 	partitionList, err := c.Partitions(topic)
@@ -98,12 +98,13 @@ func (consumer KConsumer) RecvMessage(topic string) {
 		go func(pc sarama.PartitionConsumer) {
 			defer wg.Done()
 			for msg := range pc.Messages() {
-				logger.Console.WithFields(logrus.Fields{
-					"Partition": msg.Partition,
-					"Offset":    msg.Offset,
-					"Key":       string(msg.Key),
-					"Value":     string(msg.Value),
-				}).Info("RecvMessage")
+				returnData(msg)
+				//logger.Console.WithFields(logrus.Fields{
+				//	"Partition": msg.Partition,
+				//	"Offset":    msg.Offset,
+				//	"Key":       string(msg.Key),
+				//	"Value":     string(msg.Value),
+				//}).Info("RecvMessage")
 			}
 		}(pc)
 	}
