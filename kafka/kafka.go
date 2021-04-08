@@ -3,8 +3,6 @@ package kafka
 import (
 	"fmt"
 	"github.com/Shopify/sarama"
-	"github.com/feitianlove/golib/common/logger"
-	"github.com/sirupsen/logrus"
 	"sync"
 )
 
@@ -21,9 +19,6 @@ type KConsumer struct {
 
 func NewKafkaProduct(kafka *Kafka) (*KProduct, error) {
 	if kafka == nil {
-		logger.Console.WithFields(logrus.Fields{
-			"kafka": "kafka config is nil",
-		}).Error("kafka config is nil")
 		return nil, fmt.Errorf("the kafka struct is nil")
 	}
 	config := sarama.NewConfig()
@@ -31,36 +26,22 @@ func NewKafkaProduct(kafka *Kafka) (*KProduct, error) {
 	config.Producer.Partitioner = sarama.NewRandomPartitioner //随机分区器
 	client, err := sarama.NewClient([]string{kafka.ServerAddr}, config)
 	if err != nil {
-		logger.Console.WithFields(logrus.Fields{
-			"kafka": fmt.Sprintf("%s", err),
-		}).Error(" kafka NewClient error")
 		return nil, err
 	}
 	producer, err := sarama.NewSyncProducerFromClient(client)
 	if err != nil {
-		logger.Console.WithFields(logrus.Fields{
-			"kafka": fmt.Sprintf("%s", err),
-		}).Error(" kafka NewSyncProducerFromClient error")
 		return nil, err
 	}
 	return &KProduct{Producer: producer}, nil
 }
 
-func (k KProduct) SendMessage(data *sarama.ProducerMessage) error {
+func (k KProduct) SendMessage(data *sarama.ProducerMessage) (error, int32, int64) {
 	produce := k.Producer
 	partition, offset, err := produce.SendMessage(data)
 	if err != nil {
-		logger.Console.WithFields(logrus.Fields{
-			"kafka": fmt.Sprintf("unable to produce message%s\n", err),
-		}).Error(" kafka NewClient error")
-		return err
+		return err, 0, 0
 	}
-	logger.Console.WithFields(logrus.Fields{
-		"data":      data,
-		"partition": partition,
-		"offset":    offset,
-	}).Info("kafka SendMessage")
-	return nil
+	return err, partition, offset
 }
 
 func NewKafkaConsumer(kafka *Kafka) (*KConsumer, error) {
@@ -68,30 +49,22 @@ func NewKafkaConsumer(kafka *Kafka) (*KConsumer, error) {
 	config.Consumer.Return.Errors = true
 	consumer, err := sarama.NewConsumer([]string{kafka.ServerAddr}, config)
 	if err != nil {
-		logger.Console.WithFields(logrus.Fields{
-			"kafka": fmt.Sprintf("unable to NewKafkaConsumer%s\n", err),
-		}).Error("NewKafkaConsumer")
 		return nil, err
 	}
 	return &KConsumer{Consumer: consumer}, err
 }
 
-func (consumer KConsumer) RecvMessage(returnData func(data *sarama.ConsumerMessage), topic string) {
+func (consumer KConsumer) RecvMessage(returnData func(data *sarama.ConsumerMessage), topic string) error {
 	var wg sync.WaitGroup
 	c := consumer.Consumer
 	partitionList, err := c.Partitions(topic)
 	if err != nil {
-		logger.Console.WithFields(logrus.Fields{
-			"kafka": fmt.Sprintf("faild to get the list of partitions%s\n", err),
-		}).Error("RecvMessage")
+		return err
 	}
 	for partition := range partitionList {
 		pc, err := c.ConsumePartition(topic, int32(partition), sarama.OffsetOldest)
 		if err != nil {
-			logger.Console.WithFields(logrus.Fields{
-				"kafka": fmt.Sprintf("Failed to start consumer for partition %d: %s\n", partition, err),
-			}).Error("kakfa.go  RecvMessage error")
-			return
+			return err
 		}
 		defer pc.AsyncClose()
 		wg.Add(1)
@@ -112,5 +85,5 @@ func (consumer KConsumer) RecvMessage(returnData func(data *sarama.ConsumerMessa
 	defer func() {
 		_ = c.Close()
 	}()
-
+	return nil
 }
