@@ -114,6 +114,7 @@ func InitLoggerJSONFormatter(logConf *LogConf) (*logrus.Logger, error) {
 	}
 
 	var logger = logrus.New()
+	logger.SetReportCaller(true) // 显示行号等信息
 	if !filepath.IsAbs(logConf.LogPath) {
 		logConf.LogPath = filepath.Join(filepath.Dir(os.Args[0]), logConf.LogPath)
 	}
@@ -141,7 +142,6 @@ func InitLoggerJSONFormatter(logConf *LogConf) (*logrus.Logger, error) {
 	return logger, nil
 }
 
-// 每10分钟一个日志 用于om log上报
 func InitLoggerTenMinute(logConf *LogConf) (*logrus.Logger, error) {
 	logConf = defaultValue(logConf)
 	level, err := logrus.ParseLevel(logConf.LogLevel)
