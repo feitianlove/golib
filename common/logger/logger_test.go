@@ -1,32 +1,25 @@
 package logger_test
 
 import (
-	"testing"
-	"time"
-
+	"fmt"
 	"github.com/feitianlove/golib/common/logger"
-
 	"github.com/sirupsen/logrus"
+	"testing"
 )
 
 func TestInitLoggerTenMinute(t *testing.T) {
-	got, err := logger.InitLoggerTenMinute(&logger.LogConf{
-		LogLevel:      "info",
-		LogPath:       "/data/home/golib/log/golib_test.log",
+	ctrl, err := logger.InitLogger(&logger.LogConf{
+		LogLevel: "info",
+		//LogPath:       "/data/home/golib/log/golib_test.log",
+		LogPath: "/Users/fenghui/goCode/golib/common/log/golib_test.log",
+
 		LogReserveDay: 1,
-		ReportCaller:  false,
+		ReportCaller:  true,
 	})
-	if err != nil {
-		panic(err)
-	}
-	tt := time.NewTicker(59 * time.Second)
-	var id int64
-	for {
-		id++
-		got.WithFields(logrus.Fields{
-			"id":     id,
-			"timexx": time.Now().Unix(),
-		})
-		<-tt.C
-	}
+	fmt.Println(err)
+	ctrl.WithFields(logrus.Fields{
+		"1": 2,
+		"3": "4",
+	}).Info("test")
+	ctrl.Info("fksd")
 }

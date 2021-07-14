@@ -13,6 +13,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// 初始化
+type LogConf struct {
+	LogLevel      string
+	LogPath       string
+	LogReserveDay int
+	ReportCaller  bool
+}
+
 func NewLoggerInstance() *logrus.Logger {
 	l := logrus.New()
 	l.SetLevel(logrus.ErrorLevel)
@@ -76,9 +84,8 @@ func InitLogger(logConf *LogConf) (*logrus.Logger, error) {
 	if err != nil {
 		return nil, fmt.Errorf("LogLevel err:%w\n", err)
 	}
-
 	var logger = logrus.New()
-	logger.SetReportCaller(true) // 显示行号等信息
+
 	if !filepath.IsAbs(logConf.LogPath) {
 		logConf.LogPath = filepath.Join(filepath.Dir(os.Args[0]), logConf.LogPath)
 	}
@@ -99,7 +106,7 @@ func InitLogger(logConf *LogConf) (*logrus.Logger, error) {
 		logrus.FatalLevel: writer,
 		logrus.PanicLevel: writer,
 		logrus.TraceLevel: writer,
-	}, &logrus.TextFormatter{}))
+	}, &MyFormatter{}))
 	logger.SetOutput(ioutil.Discard)
 	logger.SetLevel(level)
 	logger.SetReportCaller(logConf.ReportCaller)
@@ -115,7 +122,6 @@ func InitLoggerJSONFormatter(logConf *LogConf) (*logrus.Logger, error) {
 	}
 
 	var logger = logrus.New()
-	logger.SetReportCaller(true) // 显示行号等信息
 	if !filepath.IsAbs(logConf.LogPath) {
 		logConf.LogPath = filepath.Join(filepath.Dir(os.Args[0]), logConf.LogPath)
 	}
@@ -175,12 +181,4 @@ func InitLoggerTenMinute(logConf *LogConf) (*logrus.Logger, error) {
 	logger.SetOutput(ioutil.Discard)
 	logger.SetLevel(level)
 	return logger, nil
-}
-
-// 初始化
-type LogConf struct {
-	LogLevel      string
-	LogPath       string
-	LogReserveDay int
-	ReportCaller  bool
 }
