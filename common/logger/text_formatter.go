@@ -106,7 +106,6 @@ func (format *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	b.WriteString(time.Now().Format("2006-02-01 15:04:05.9999"))
 	b.WriteString(" [" + strings.ToUpper(entry.Level.String()) + "] ")
 	var keys []string
-	fmt.Println(entry.Data)
 	for k := range entry.Data {
 		keys = append(keys, k)
 	}
