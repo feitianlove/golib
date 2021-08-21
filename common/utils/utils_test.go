@@ -170,3 +170,7 @@ func TestSplitSlice(t *testing.T) {
 	println(len(d))
 	println(1)
 }
+
+func TestGetLocalIP(t *testing.T) {
+	fmt.Println(GetLocalIP())
+}

@@ -1,0 +1,11 @@
+.idea
+*.exe
+polaris
+/tools/
+/.vs/
+/etc/*.conf
+!/etc/*.example.conf
+/build
+*.test.go
+
+*.log

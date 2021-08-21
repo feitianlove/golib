@@ -30,7 +30,13 @@ func RespOkDataCount(c *gin.Context, data interface{}, count int32, errMsg strin
 }
 
 func RespErrCode(c *gin.Context, e ECode, errMsg string) {
-	result := Response{RetCode: ParamEmpty, ErrMsg: fmt.Sprintf("%s:%s", e, errMsg)}
+	result := Response{RetCode: e, ErrMsg: fmt.Sprintf("%s:%s", e, errMsg)}
+	c.JSON(200, result)
+	c.Next()
+}
+
+func RespErrData(c *gin.Context, e ECode, data interface{}, errMsg string) {
+	result := Response{RetCode: e, Data: data, ErrMsg: fmt.Sprintf("%s:%s", e, errMsg)}
 	c.JSON(200, result)
 	c.Next()
 }
