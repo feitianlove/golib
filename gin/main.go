@@ -1,4 +1,4 @@
-package main
+package main1
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func main() {
+func main1() {
 	router := gin.Default()
 	router.LoadHTMLGlob("./gin/web/*.html")
 	router.Use(Session("ftfeng"))

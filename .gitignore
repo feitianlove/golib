@@ -7,5 +7,6 @@ polaris
 !/etc/*.example.conf
 /build
 *.test.go
-
+/test_kafka/
 *.log
+/build/
