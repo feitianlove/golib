@@ -103,8 +103,9 @@ func (c *ESClient) searchAfter(query map[string]interface{}, index,
 		return nil, false, fmt.Errorf("json encode dsl failed err %s , dsl: %v", err, dsl)
 	}
 	dslStr := dslBuf.String()
-	debugPattern := fmt.Sprintf("Get %s/%s/_search?sort=metricsId:asc&size=%d",
-		index, documentType, size)
+	// sort = id:asc
+	debugPattern := fmt.Sprintf("Get %s/%s/_search?sort=%s&size=%d",
+		index, documentType, descCondition, size)
 	searchCtx, searchCancel := context.WithTimeout(context.Background(),
 		time.Duration(c.searchTimeout)*time.Second)
 	defer searchCancel()
