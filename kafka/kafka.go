@@ -114,6 +114,7 @@ func newKafkaConsumerClient(kafka *Kafka, setCustomParam setCustomParamFunc) (*C
 		config.Consumer.Retry.Backoff = kafka.ConsumerOffsetParam.RetryBackoff
 		config.Consumer.Retry.BackoffFunc = kafka.ConsumerOffsetParam.RetryBackoffFunc
 		config.Consumer.Offsets.Initial = kafka.ConsumerOffsetParam.ConsumerDefaultOffset
+		config.Consumer.Offsets.Retry.Max = kafka.ConsumerOffsetParam.MAX
 	}
 	//自定义参数
 	if setCustomParam != nil {
@@ -185,7 +186,7 @@ func (client ClientKafka) ReceiveMessageByConsumerGroup(groupId string, context 
 	if client.ConsumerClient == nil {
 		return fmt.Errorf("please call ReceiveMessageByConsumer after initialization NewKafkaConsumerClient")
 	}
-	cGroup, err := sarama.NewConsumerGroupFromClient("testgroup", client.ConsumerGroupClient)
+	cGroup, err := sarama.NewConsumerGroupFromClient(groupId, client.ConsumerGroupClient)
 	if err != nil {
 		return err
 	}
