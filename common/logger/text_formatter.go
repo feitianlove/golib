@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 	"time"
-
+	"path/filepath"
 	"github.com/sirupsen/logrus"
 )
 
@@ -105,12 +105,10 @@ func (format *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	}
 	b.WriteString(time.Now().Format("2006-02-01 15:04:05.9999"))
 	b.WriteString(" [" + strings.ToUpper(entry.Level.String()) + "] ")
-	b.WriteString(time.Now().Format("2006-02-01 15:04:05.9999"))
-	b.WriteString(" [" + strings.ToUpper(entry.Level.String()) + "] ")
 	if entry.HasCaller() {
-		//fName := filepath.Base(entry.Caller.File)
+		fName := filepath.Base(entry.Caller.File)
 		newLog := fmt.Sprintf("[%s:%d %s] %s\n",
-			entry.Caller.File, entry.Caller.Line, entry.Caller.Function, entry.Message)
+			fName, entry.Caller.Line, entry.Caller.Function, entry.Message)
 		b.WriteString(newLog)
 	} else{
 		newLog := fmt.Sprintf("[%s] %s\n", entry.Level, entry.Message)
