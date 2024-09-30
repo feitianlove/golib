@@ -107,11 +107,11 @@ func (format *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	b.WriteString(" [" + strings.ToUpper(entry.Level.String()) + "] ")
 	if entry.HasCaller() {
 		fName := filepath.Base(entry.Caller.File)
-		newLog := fmt.Sprintf("[%s:%d] %s\n",
-			fName, entry.Caller.Line, entry.Message)
+		newLog := fmt.Sprintf("[%s:%d]",
+			fName, entry.Caller.Line)
 		b.WriteString(newLog)
 	} else {
-		newLog := fmt.Sprintf("[%s] %s\n", entry.Level, entry.Message)
+		newLog := fmt.Sprintf("[%s]", entry.Level)
 		b.WriteString(newLog)
 	}
 	var keys []string
@@ -166,11 +166,11 @@ func (format *MyFormatter) FormatWithFunc(entry *logrus.Entry) ([]byte, error) {
 	b.WriteString(" [" + strings.ToUpper(entry.Level.String()) + "] ")
 	if entry.HasCaller() {
 		fName := filepath.Base(entry.Caller.File)
-		newLog := fmt.Sprintf("[%s:%d %s] %s\n",
-			fName, entry.Caller.Line, entry.Caller.Function, entry.Message)
+		newLog := fmt.Sprintf("[%s:%d]",
+			fName, entry.Caller.Line)
 		b.WriteString(newLog)
 	} else {
-		newLog := fmt.Sprintf("[%s] %s\n", entry.Level, entry.Message)
+		newLog := fmt.Sprintf("[%s]", entry.Level)
 		b.WriteString(newLog)
 	}
 	var keys []string
